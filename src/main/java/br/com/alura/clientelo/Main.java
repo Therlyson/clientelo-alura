@@ -23,16 +23,11 @@ public class Main {
 
     public static void main(String[] args) throws IOException, URISyntaxException {
         Pedido[] pedidos = ProcessadorDeCsv.processaArquivo("pedidos.csv");
+        RelatorioSintetico relatorio = new RelatorioSintetico();
 
-
-        int totalDeProdutosVendidos = 0;
-        int totalDePedidosRealizados = 0;
-        BigDecimal montanteDeVendas = BigDecimal.ZERO;
-        Pedido pedidoMaisBarato = null;
         Pedido pedidoMaisCaro = null;
 
         String[] categoriasProcessadas = new String[10];
-        int totalDeCategorias = 0;
 
         for (int i = 0; i < pedidos.length; i++) {
             Pedido pedidoAtual = pedidos[i];
@@ -41,17 +36,15 @@ public class Main {
                 break;
             }
 
-            if (pedidoMaisBarato == null || pedidoAtual.getPreco().multiply(new BigDecimal(pedidoAtual.getQuantidade())).compareTo(pedidoMaisBarato.getPreco().multiply(new BigDecimal(pedidoMaisBarato.getQuantidade()))) < 0) {
-                pedidoMaisBarato = pedidoAtual;
-            }
+            relatorio.calcularPedidoMaisBarato(pedidoAtual);
 
             if (pedidoMaisCaro == null || pedidoAtual.getPreco().multiply(new BigDecimal(pedidoAtual.getQuantidade())).compareTo(pedidoMaisCaro.getPreco().multiply(new BigDecimal(pedidoMaisCaro.getQuantidade()))) > 0) {
                 pedidoMaisCaro = pedidoAtual;
             }
 
-            montanteDeVendas = montanteDeVendas.add(pedidoAtual.getPreco().multiply(new BigDecimal(pedidoAtual.getQuantidade())));
-            totalDeProdutosVendidos += pedidoAtual.getQuantidade();
-            totalDePedidosRealizados++;
+            relatorio.contabilizarMontanteDeVendas(pedidoAtual);
+            relatorio.contabilizarProdutosVendidos(pedidoAtual);
+            relatorio.contabilizarPedidos();
 
             boolean jahProcessouCategoria = false;
             for (int j = 0; j < categoriasProcessadas.length; j++) {
@@ -61,7 +54,7 @@ public class Main {
             }
 
             if (!jahProcessouCategoria) {
-                totalDeCategorias++;
+                relatorio.contabilizarCategorias();
 
                 if (categoriasProcessadas[categoriasProcessadas.length - 1] != null) {
                     categoriasProcessadas = Arrays.copyOf(categoriasProcessadas, categoriasProcessadas.length * 2);
@@ -77,11 +70,14 @@ public class Main {
         }
 
         logger.info("##### RELATÓRIO DE VALORES TOTAIS #####");
-        logger.info("TOTAL DE PEDIDOS REALIZADOS: {}", totalDePedidosRealizados);
-        logger.info("TOTAL DE PRODUTOS VENDIDOS: {}", totalDeProdutosVendidos);
-        logger.info("TOTAL DE CATEGORIAS: {}", totalDeCategorias);
-        logger.info("MONTANTE DE VENDAS: {}", NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(montanteDeVendas.setScale(2, RoundingMode.HALF_DOWN)));
-        logger.info("PEDIDO MAIS BARATO: {} ({})", NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(pedidoMaisBarato.getPreco().multiply(new BigDecimal(pedidoMaisBarato.getQuantidade())).setScale(2, RoundingMode.HALF_DOWN)), pedidoMaisBarato.getProduto());
+        logger.info("TOTAL DE PEDIDOS REALIZADOS: {}", relatorio.getTotalPedidos());
+        logger.info("TOTAL DE PRODUTOS VENDIDOS: {}", relatorio.getTotalProdutosVendidos());
+        logger.info("TOTAL DE CATEGORIAS: {}", relatorio.getTotalCategorias());
+        logger.info("MONTANTE DE VENDAS: {}", NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).
+                format(relatorio.getMontanteDeVendas().setScale(2, RoundingMode.HALF_DOWN)));
+        logger.info("PEDIDO MAIS BARATO: {} ({})", NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).
+                format(relatorio.getPedidoMaisBarato().getPreco().multiply(new BigDecimal(relatorio.getPedidoMaisBarato().getQuantidade())).
+                        setScale(2, RoundingMode.HALF_DOWN)), relatorio.getPedidoMaisBarato().getProduto());
         logger.info("PEDIDO MAIS CARO: {} ({})\n", NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(pedidoMaisCaro.getPreco().multiply(new BigDecimal(pedidoMaisCaro.getQuantidade())).setScale(2, RoundingMode.HALF_DOWN)), pedidoMaisCaro.getProduto());
         logger.info("### FIM DO RELATÓRIO ###");
     }
