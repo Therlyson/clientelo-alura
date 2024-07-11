@@ -1,16 +1,14 @@
 package br.com.alura.clientelo;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.NumberFormat;
-import java.util.Locale;
 
 public class RelatorioSintetico {
     private int totalPedidos = 0;
     private int totalProdutosVendidos = 0;
     private int totalCategorias = 0;
     private BigDecimal montanteDeVendas = BigDecimal.ZERO;
-    private Pedido pedidoMaisBarato = null;
+    private Pedido pedidoMaisBarato;
+    private Pedido pedidoMaisCaro;
 
     public void contabilizarPedidos(){
         totalPedidos++;
@@ -57,5 +55,18 @@ public class RelatorioSintetico {
 
     public Pedido getPedidoMaisBarato() {
         return pedidoMaisBarato;
+    }
+
+    public void calcularPedidoMaisCaro(Pedido pedido){
+        BigDecimal precoTotalPedido = pedido.getPreco().multiply(new BigDecimal(pedido.getQuantidade()));
+
+        if (pedidoMaisCaro == null || precoTotalPedido.compareTo(pedidoMaisCaro.getPreco()
+                .multiply(new BigDecimal(pedidoMaisCaro.getQuantidade()))) > 0) {
+            pedidoMaisCaro = pedido;
+        }
+    }
+
+    public Pedido getPedidoMaisCaro() {
+        return pedidoMaisCaro;
     }
 }
