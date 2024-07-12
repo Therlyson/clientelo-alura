@@ -1,4 +1,4 @@
-package br.com.alura.clientelo;
+package br.com.alura.clientelo.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -8,7 +8,6 @@ public class Pedido {
     private String categoria;
     private String produto;
     private String cliente;
-
     private BigDecimal preco;
     private int quantidade;
 
@@ -72,6 +71,26 @@ public class Pedido {
 
     public void setData(LocalDate data) {
         this.data = data;
+    }
+
+    public boolean isMaisBaratoQue(Pedido outroPedido) {
+        if(this.preco.multiply(new BigDecimal(this.quantidade)).
+                compareTo(outroPedido.preco.multiply(new BigDecimal(outroPedido.quantidade))) < 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isMaisCaroQue(Pedido outroPedido) {
+        if(this.preco.multiply(new BigDecimal(this.quantidade)).
+                compareTo(outroPedido.preco.multiply(new BigDecimal(outroPedido.quantidade))) > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public BigDecimal getValorTotal() {
+        return preco.multiply(new BigDecimal(quantidade));
     }
 
     @Override

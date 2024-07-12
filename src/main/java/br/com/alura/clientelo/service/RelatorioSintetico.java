@@ -1,7 +1,10 @@
-package br.com.alura.clientelo;
+package br.com.alura.clientelo.service;
+
+import br.com.alura.clientelo.model.Pedido;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.List;
 
 public class RelatorioSintetico {
     private int totalPedidos = 0;
@@ -58,9 +61,7 @@ public class RelatorioSintetico {
     }
 
     public void contabilizarMontanteDeVendas(Pedido pedido){
-        BigDecimal preco = pedido.getPreco();
-        BigDecimal quantidade = new BigDecimal(pedido.getQuantidade());
-        montanteDeVendas = montanteDeVendas.add(preco.multiply(quantidade));
+        montanteDeVendas = montanteDeVendas.add(pedido.getValorTotal());
     }
 
     public BigDecimal getMontanteDeVendas() {
@@ -68,10 +69,7 @@ public class RelatorioSintetico {
     }
 
     public void calcularPedidoMaisBarato(Pedido pedido){
-        BigDecimal precoTotalPedido = pedido.getPreco().multiply(new BigDecimal(pedido.getQuantidade()));
-
-        if (pedidoMaisBarato == null || precoTotalPedido.compareTo(pedidoMaisBarato.getPreco()
-                .multiply(new BigDecimal(pedidoMaisBarato.getQuantidade()))) < 0) {
+        if (pedidoMaisBarato == null || pedido.isMaisBaratoQue(pedidoMaisBarato)) {
             pedidoMaisBarato = pedido;
         }
     }
@@ -85,10 +83,7 @@ public class RelatorioSintetico {
     }
 
     public void calcularPedidoMaisCaro(Pedido pedido){
-        BigDecimal precoTotalPedido = pedido.getPreco().multiply(new BigDecimal(pedido.getQuantidade()));
-
-        if (pedidoMaisCaro == null || precoTotalPedido.compareTo(pedidoMaisCaro.getPreco()
-                .multiply(new BigDecimal(pedidoMaisCaro.getQuantidade()))) > 0) {
+        if (pedidoMaisCaro == null || pedido.isMaisCaroQue(pedidoMaisCaro)) {
             pedidoMaisCaro = pedido;
         }
     }
@@ -101,12 +96,9 @@ public class RelatorioSintetico {
         return pedidoMaisCaro.getPreco().multiply(new BigDecimal(pedidoMaisCaro.getQuantidade()));
     }
 
-    public void processarPedidos(Pedido[] pedidos){
-        for (int i = 0; i < pedidos.length; i++) {
-            Pedido pedidoAtual = pedidos[i];
-            if (pedidoAtual == null) {
-                break;
-            }
+    public void processarPedidos(List<Pedido> pedidos){
+        for (int i = 0; i < pedidos.size(); i++) {
+            Pedido pedidoAtual = pedidos.get(i);
 
             calcularPedidoMaisBarato(pedidoAtual);
             calcularPedidoMaisCaro(pedidoAtual);

@@ -1,10 +1,15 @@
 package br.com.alura.clientelo;
 
+import br.com.alura.clientelo.model.Pedido;
+import br.com.alura.clientelo.service.RelatorioSintetico;
+import br.com.alura.clientelo.utils.ProcessadorDeArquivos;
+import br.com.alura.clientelo.utils.ProcessadorDeCsv;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.RoundingMode;
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.Locale;
 
 public class Main {
@@ -12,7 +17,8 @@ public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args){
-        Pedido[] pedidos = ProcessadorDeCsv.processaArquivo("pedidos.csv");
+        ProcessadorDeArquivos processadorDeArquivos = new ProcessadorDeCsv();
+        List<Pedido> pedidos = processadorDeArquivos.processaArquivo("pedidos.csv");
         RelatorioSintetico relatorio = new RelatorioSintetico();
 
         relatorio.processarPedidos(pedidos);

@@ -1,5 +1,5 @@
-import br.com.alura.clientelo.Pedido;
-import br.com.alura.clientelo.RelatorioSintetico;
+import br.com.alura.clientelo.model.Pedido;
+import br.com.alura.clientelo.service.RelatorioSintetico;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
