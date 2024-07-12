@@ -1,5 +1,7 @@
 package br.com.alura.clientelo.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -10,7 +12,7 @@ public class Pedido {
     private String cliente;
     private BigDecimal preco;
     private int quantidade;
-
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate data;
 
     public Pedido(String categoria, String produto, String cliente, BigDecimal preco, int quantidade, LocalDate data) {
@@ -101,7 +103,7 @@ public class Pedido {
                 ", cliente='" + cliente + '\'' +
                 ", preco=" + preco +
                 ", quantidade=" + quantidade +
-                ", data=" + data +
+                ", data=" + data.toString() +
                 '}';
     }
 

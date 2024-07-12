@@ -20,8 +20,7 @@ public class ProcessadorDeCsv implements ProcessadorDeArquivos{
     @Override
     public List<Pedido> processaArquivo(String nomeDoArquivo) {
         try {
-            URL recursoCSV = ClassLoader.getSystemResource(nomeDoArquivo);
-            Path caminhoDoArquivo = Path.of(recursoCSV.toURI());
+            Path caminhoDoArquivo = procurarCaminho(nomeDoArquivo);
 
             List<String[]> linhas = readLineByLine(caminhoDoArquivo);
 
@@ -47,6 +46,11 @@ public class ProcessadorDeCsv implements ProcessadorDeArquivos{
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Path procurarCaminho(String nomeDoArquivo) throws URISyntaxException {
+        URL recursoCSV = ClassLoader.getSystemResource(nomeDoArquivo);
+        return Path.of(recursoCSV.toURI());
     }
 
     private List<String[]> readLineByLine(Path filePath) throws Exception {

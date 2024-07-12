@@ -4,9 +4,15 @@ import br.com.alura.clientelo.model.Pedido;
 import br.com.alura.clientelo.service.RelatorioSintetico;
 import br.com.alura.clientelo.utils.ProcessadorDeArquivos;
 import br.com.alura.clientelo.utils.ProcessadorDeCsv;
+import br.com.alura.clientelo.utils.ProcessadorDeJson;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.List;
@@ -16,10 +22,13 @@ public class Main {
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
-    public static void main(String[] args){
-        ProcessadorDeArquivos processadorDeArquivos = new ProcessadorDeCsv();
-        List<Pedido> pedidos = processadorDeArquivos.processaArquivo("pedidos.csv");
+    public static void main(String[] args) throws IOException {
+//        ProcessadorDeArquivos processadorDeArquivos = new ProcessadorDeCsv();
+//        List<Pedido> pedidos = processadorDeArquivos.processaArquivo("pedidos.csv");
         RelatorioSintetico relatorio = new RelatorioSintetico();
+
+        ProcessadorDeArquivos processadorDeArquivos = new ProcessadorDeJson();
+        List<Pedido> pedidos = processadorDeArquivos.processaArquivo("pedidos.json");
 
         relatorio.processarPedidos(pedidos);
 
