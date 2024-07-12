@@ -23,6 +23,9 @@ public class Pedido {
         this.data = data;
     }
 
+    public Pedido() {
+    }
+
     public String getCategoria() {
         return categoria;
     }
@@ -45,6 +48,30 @@ public class Pedido {
 
     public LocalDate getData() {
         return data;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
+    public void setProduto(String produto) {
+        this.produto = produto;
+    }
+
+    public void setCliente(String cliente) {
+        this.cliente = cliente;
+    }
+
+    public void setPreco(BigDecimal preco) {
+        this.preco = preco;
+    }
+
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public void setData(LocalDate data) {
+        this.data = data;
     }
 
     @Override
