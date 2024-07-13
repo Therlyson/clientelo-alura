@@ -18,12 +18,11 @@ import java.util.List;
 public class ProcessadorDeCsv implements ProcessadorDeArquivos{
 
     @Override
-    public List<Pedido> processaArquivo(String nomeDoArquivo) {
+    public List<Pedido> processarArquivo(String nomeDoArquivo) {
         try {
-            Path caminhoDoArquivo = procurarCaminho(nomeDoArquivo);
+            Path caminhoDoArquivo = procurarCaminhoDoArquivo(nomeDoArquivo);
 
-            List<String[]> linhas = readLineByLine(caminhoDoArquivo);
-
+            List<String[]> linhas = lerLinhasDoArquivo(caminhoDoArquivo);
             List<Pedido> pedidos = new ArrayList<>();
 
             for(String[] registro : linhas) {
@@ -48,12 +47,12 @@ public class ProcessadorDeCsv implements ProcessadorDeArquivos{
         }
     }
 
-    public Path procurarCaminho(String nomeDoArquivo) throws URISyntaxException {
+    private Path procurarCaminhoDoArquivo(String nomeDoArquivo) throws URISyntaxException {
         URL recursoCSV = ClassLoader.getSystemResource(nomeDoArquivo);
         return Path.of(recursoCSV.toURI());
     }
 
-    private List<String[]> readLineByLine(Path filePath) throws Exception {
+    private List<String[]> lerLinhasDoArquivo(Path filePath) throws Exception {
         List<String[]> list = new ArrayList<>();
         try (Reader reader = Files.newBufferedReader(filePath)) {
             try (CSVReader csvReader = new CSVReader(reader)) {

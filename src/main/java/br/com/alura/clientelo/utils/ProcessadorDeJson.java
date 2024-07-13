@@ -12,25 +12,27 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class ProcessadorDeJson implements ProcessadorDeArquivos{
+    private ObjectMapper objectMapper;
 
+    public ProcessadorDeJson() {
+        objectMapper = new ObjectMapper();
+    }
 
     @Override
-    public List<Pedido> processaArquivo(String nomeDoArquivo) {
-        ObjectMapper objectMapper = new ObjectMapper();
+    public List<Pedido> processarArquivo(String nomeDoArquivo) {
         objectMapper.registerModule(new JavaTimeModule()); // Registra o módulo para suporte a LocalDate
 
         try{
-            Path caminhoDoArquivo = procurarCaminho(nomeDoArquivo);
-            List<Pedido> pedidos = objectMapper.readValue(new File(String.valueOf(caminhoDoArquivo)), new TypeReference<List<Pedido>>(){});
-            return pedidos;
+            Path caminhoDoArquivo = procurarCaminhoDoArquivo(nomeDoArquivo);
+            return objectMapper.readValue(new File(String.valueOf(caminhoDoArquivo)), new TypeReference<List<Pedido>>(){});
         } catch (URISyntaxException e) {
             throw new RuntimeException(String.format("Arquivo %s não localizado!", nomeDoArquivo));
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public Path procurarCaminho(String nomeDoArquivo) throws URISyntaxException {
+    private Path procurarCaminhoDoArquivo(String nomeDoArquivo) throws URISyntaxException {
         URL recursoCSV = ClassLoader.getSystemResource(nomeDoArquivo);
         return Path.of(recursoCSV.toURI());
     }

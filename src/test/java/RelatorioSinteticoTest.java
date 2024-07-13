@@ -28,7 +28,7 @@ public class RelatorioSinteticoTest {
 
     @Test
     void testContabilizarPedidos() {
-        relatorio.contabilizarPedidos();
+        relatorio.contabilizarTodosPedidos();
         assertEquals(1, relatorio.getTotalPedidos());
     }
 
@@ -64,9 +64,9 @@ public class RelatorioSinteticoTest {
             pedido.setData(LocalDate.parse(parts[4], DateTimeFormatter.ofPattern("dd/MM/yyyy")));
             pedido.setCliente(parts[5]);
 
-            relatorio.contabilizarPedidos();
+            relatorio.contabilizarTodosPedidos();
             relatorio.contabilizarProdutosVendidos(pedido);
-            relatorio.contabilizarCategorias(pedido);
+            relatorio.contabilizarTotalCategorias(pedido);
             relatorio.contabilizarMontanteDeVendas(pedido);
             relatorio.calcularPedidoMaisBarato(pedido);
             relatorio.calcularPedidoMaisCaro(pedido);
@@ -100,9 +100,9 @@ public class RelatorioSinteticoTest {
             pedido.setData(LocalDate.parse(parts[4], DateTimeFormatter.ofPattern("dd/MM/yyyy")));
             pedido.setCliente(parts[5]);
 
-            relatorio.contabilizarPedidos();
+            relatorio.contabilizarTodosPedidos();
             relatorio.contabilizarProdutosVendidos(pedido);
-            relatorio.contabilizarCategorias(pedido);
+            relatorio.contabilizarTotalCategorias(pedido);
             relatorio.contabilizarMontanteDeVendas(pedido);
             relatorio.calcularPedidoMaisBarato(pedido);
             relatorio.calcularPedidoMaisCaro(pedido);
